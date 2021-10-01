@@ -1,0 +1,11 @@
+void dfs(int s){
+    vis[s]=1;
+    for(int i=0;i<edge[s].size();i++){
+        int v=edge[s][i];
+        if(!vis[v]){
+            node=v;
+            vis[v]=1;
+            dfs(v);
+        }
+    }
+}
