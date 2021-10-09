@@ -3,7 +3,7 @@ using namespace std;
 vector<int> SortCyclicShifts(string s){
     int n=s.size();
     const int alphabet=256;
-    vector<int>Start(n),Freq(alphabet,0),EClass(n);
+    vector<int>Start(n),Freq(max(alphabet,n),0),EClass(n);
     for(int i=0;i<n;i++) Freq[s[i]]++;
     for(int i=1;i<alphabet;i++) Freq[i]+=Freq[i-1];
     for(int i=0;i<n;i++) Start[--Freq[s[i]]]=i;
