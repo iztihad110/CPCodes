@@ -1,0 +1,39 @@
+struct state{
+    int len,link;
+    map<int,int>next;    
+};
+state Automata[200010];
+void Init(){
+    last=node=Automata[0].len=0;
+    Automata[0].link=-1;    
+}
+void Insert(int c){
+    node++;
+    int curr=node;
+    Automata[curr].len=Automata[last].len+1;
+    int p;
+    p=last;
+    while(p!=-1 && !Automata[p].next.count(c)){
+        Automata[p].next[c]=curr;
+        p=Automata[p].link;
+    }
+    if(p==-1) Automata[curr].link=0;
+    else{
+        int q=Automata[p].next[c];
+        if(Automata[p].len+1==Automata[q].len) Automata[curr].link=q;
+        else{
+            node++;
+            int clone=node;
+            Automata[clone].len=Automata[p].len+1;
+            Automata[clone].next=Automata[q].next;
+            Automata[clone].link=Automata[q].link;
+            while(p!=-1 && Automata[p].next[c]==q){
+                Automata[p].next[c]=clone;
+                p=Automata[p].link;
+            }
+            Automata[q].link=Automata[curr].link=clone;
+            
+        }
+    }
+    last=curr;
+}
