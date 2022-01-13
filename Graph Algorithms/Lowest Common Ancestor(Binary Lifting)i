@@ -1,0 +1,32 @@
+#include<bits/stdc++.h>
+using namespace std;
+bool vis[200010];
+vector<int>adj[200010];
+int up[200010][60],start[200010],finish[200010],l,timer;
+void dfs(int s,int p){
+    vis[s]=1;
+    up[s][0]=p;
+    timer++;
+    start[s]=timer; 
+    for(int i=1;i<=l;i++){
+        up[s][i]=up[up[s][i-1]][i-1];
+    }
+    for(int i=0;i<adj[s].size();i++){
+        int v=adj[s][i];
+        if(!vis[v]) dfs(v,s); 
+    } 
+    timer++;
+    finish[s]=timer;
+}
+bool IsAncestor(int u,int v){
+    if(start[u]<=start[v] && finish[u]>=finish[v]) return 1;
+    return 0;
+}
+int LCA(int u,int v){
+    if(IsAncestor(u,v)) return u;
+    if(IsAncestor(v,u)) return v;
+    for(int i=l;i>=0;i--){
+        if(!IsAncestor(up[u][i],v)) u=up[u][i];
+    }
+    return up[u][0];
+}
