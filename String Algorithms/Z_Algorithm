@@ -1,4 +1,5 @@
-void Z_Algo(){
+int Z[1000010];
+void Z_Algo(string s){
     Z[0]=0;
     int n=s.size();
     for(int i=1,L=0,R=0;i<n;i++){
