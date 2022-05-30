@@ -1,3 +1,4 @@
+int last,node;
 struct state{
     int len,link;
     map<int,int>next;    
