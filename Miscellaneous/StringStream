@@ -1,0 +1,6 @@
+string s;
+getline(cin,s);
+stringstream ss(s);
+vector<long long>v;
+int x;
+while(ss>>x) v.push_back(x)
