@@ -17,9 +17,10 @@ struct mcmf{
     vector<vector<edge>> g;
 
     mcmf(){}
-    mcmf(int src, int sink, int nodes) : src(src), sink(sink), nodes(nodes),
-                                         par(nodes), idx(nodes), inq(nodes),
-                                         dis(nodes), g(nodes){}
+    mcmf(int src, int sink, int nodes) :
+     src(src), sink(sink), nodes(nodes),
+     par(nodes), idx(nodes), inq(nodes),
+     dis(nodes), g(nodes){}
 
     void addEdge(int u,int v,int cap,int cost,bool directed = true){
         edge _u=edge(v,g[v].size(),cap,cost);
