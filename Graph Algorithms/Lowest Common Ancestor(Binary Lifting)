@@ -1,32 +1,38 @@
 #include<bits/stdc++.h>
 using namespace std;
-bool vis[200010];
-vector<int>adj[200010];
-int up[200010][60],start[200010],finish[200010],l,timer;
-void dfs(int s,int p){
-    vis[s]=1;
-    up[s][0]=p;
-    timer++;
-    start[s]=timer; 
-    for(int i=1;i<=l;i++){
-        up[s][i]=up[up[s][i-1]][i-1];
+#define FastRead        ios_base::sync_with_stdio(0);cin.tie(nullptr);
+#define endl            "\n"
+vector<int>adj[100010];
+int a[100010],up[100010][20],dep[100010];
+void Clear(int n){
+    for(int i=1;i<=n;i++){
+        adj[i].clear();
+        dep[i]=0;
+        for(int j=0;j<20;j++) up[i][j]=0;
     }
+}
+void dfs(int s,int p){
+    if(p!=-1) up[s][0]=p;
+    for(int i=1;i<=18;i++) up[s][i]=up[up[s][i-1]][i-1];
     for(int i=0;i<adj[s].size();i++){
         int v=adj[s][i];
-        if(!vis[v]) dfs(v,s); 
-    } 
-    timer++;
-    finish[s]=timer;
-}
-bool IsAncestor(int u,int v){
-    if(start[u]<=start[v] && finish[u]>=finish[v]) return 1;
-    return 0;
+        if(v==p) continue;
+        dep[v]=dep[s]+1;
+        dfs(v,s);
+    }
 }
 int LCA(int u,int v){
-    if(IsAncestor(u,v)) return u;
-    if(IsAncestor(v,u)) return v;
-    for(int i=l;i>=0;i--){
-        if(!IsAncestor(up[u][i],v)) u=up[u][i];
+    if(dep[u]>dep[v]) swap(u,v);
+    int d=dep[v]-dep[u];
+    for(int i=18;i>=0;i--){
+        if(d&(1<<i)) v=up[v][i];
+    }
+    if(u==v) return u;
+    for(int i=18;i>=0;i--){
+        if(up[u][i]!=up[v][i]){
+            u=up[u][i];
+            v=up[v][i];
+        }
     }
     return up[u][0];
 }
