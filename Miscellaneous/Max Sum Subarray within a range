@@ -1,0 +1,76 @@
+#include<bits/stdc++.h>
+using namespace std;
+int a[50010];
+struct Node{
+    int PreMax,SufMax,TotalSum,MaxSubSum;
+};
+Node tree[200010];
+Node Merge(Node left,Node right){
+    Node ret;
+    ret.TotalSum=left.TotalSum+right.TotalSum;
+    ret.PreMax=
+    max(left.PreMax,left.TotalSum+right.PreMax);
+    ret.SufMax=max(right.SufMax,left.SufMax+right.TotalSum);
+    ret.MaxSubSum=
+    max(left.SufMax+right.PreMax,max(
+    left.MaxSubSum,right.MaxSubSum));
+    return ret;
+}
+void build(int node,int b,int e){
+    if(b==e){
+        tree[node].MaxSubSum=
+        tree[node].PreMax=tree[node].SufMax=
+        tree[node].TotalSum=a[b];
+        return;
+    }
+    int mid=(b+e)/2;
+    int left=2*node;
+    int right=2*node+1;
+    build(left,b,mid);
+    build(right,mid+1,e);
+    tree[node]=Merge(tree[left],tree[right]);
+}
+void update(int node,int b,int e,int x,int val){
+    if(x<b || x>e) return;
+    if(b==e){
+        a[b]=val;
+        tree[node].MaxSubSum=tree[node].PreMax=
+        tree[node].SufMax=tree[node].TotalSum=val;
+        return;
+    }
+    int mid=(b+e)/2;
+    int left=2*node;
+    int right=2*node+1;
+    update(left,b,mid,x,val);
+    update(right,mid+1,e,x,val);
+    tree[node]=Merge(tree[left],tree[right]);
+}
+Node query(int node,int b,int e,int l,int r){
+    if(b>=l && e<=r) return tree[node];
+    int left=2*node;
+    int right=2*node+1;
+    int mid=(b+e)/2;
+    if(l>mid) return query(right,mid+1,e,l,r);
+    if(r<=mid) return query(left,b,mid,l,r);
+    Node q1=query(left,b,mid,l,r);
+    Node q2=query(right,mid+1,e,l,r);
+    return Merge(q1,q2);
+}
+int main(){
+    int n;
+    cin>>n;
+    for(int i=1;i<=n;i++) cin>>a[i];
+    int q;
+    build(1,1,n);
+    cin>>q;
+    while(q--){
+        int type,l,r,val; cin>>type;
+        if(type==0){
+            cin>>l>>val;
+            update(1,1,n,l,val);
+        }
+        if(type==1){
+            cin>>l>>r; cout<<query(1,1,n,l,r).MaxSubSum<<endl;
+        }
+    }
+}
